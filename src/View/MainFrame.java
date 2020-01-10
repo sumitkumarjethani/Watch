@@ -1,6 +1,6 @@
 package View;
 
-import Controller.Command;
+import Presenter.WatchPresenter;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 public class MainFrame extends JFrame{
     private final Map<String,String> labels;
-    private final Map<String,Command> commands;
+    private WatchPresenter watchPresenter;
     
     public MainFrame(){
         setTitle("Analog Watch");
@@ -24,7 +24,6 @@ public class MainFrame extends JFrame{
         this.setResizable(false);
         setLayout(new BorderLayout());
         labels = new HashMap<>();
-        commands = new HashMap<>();
         initLabels();
         this.add(toolbar(),BorderLayout.SOUTH);
     }
@@ -33,12 +32,12 @@ public class MainFrame extends JFrame{
         this.setVisible(true);
     }
     
-    public void addCommand(String name, Command command){
-        commands.put(name, command);
-    }
-    
     public void addWatchDisplay(WatchDisplay watchDisplay){
         this.add(watchDisplay,BorderLayout.CENTER);
+    }
+    
+    public void setWatchPresenter(WatchPresenter watchPresenter){
+        this.watchPresenter = watchPresenter;
     }
 
     private void initLabels() {
@@ -57,7 +56,7 @@ public class MainFrame extends JFrame{
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                commands.get(label).execute();
+                watchPresenter.exit();
             }
         });
         return button;
