@@ -18,9 +18,10 @@ public class MainFrame extends JFrame{
     
     public MainFrame(){
         setTitle("Analog Watch");
-        setSize(500,500);
+        setSize(450,500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setResizable(false);
         setLayout(new BorderLayout());
         labels = new HashMap<>();
         commands = new HashMap<>();
