@@ -1,6 +1,6 @@
 package View;
 
-import Presenter.WatchPresenter;
+import Controller.Command;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -14,41 +14,49 @@ import javax.swing.JPanel;
 
 public class MainFrame extends JFrame{
     private final Map<String,String> labels;
-    private WatchPresenter watchPresenter;
+    private final Map<String,Command> commands;
+    private final JPanel toolbar;
     
     public MainFrame(){
         setTitle("Analog Watch");
-        setSize(450,500);
+        setSize(500,550);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
         setLayout(new BorderLayout());
         labels = new HashMap<>();
+        commands = new HashMap<>();
+        toolbar = new JPanel();
         initLabels();
-        this.add(toolbar(),BorderLayout.SOUTH);
+        initToolbar();
+        this.add(toolbar,BorderLayout.SOUTH);
     }
     
     public void execute(){
         this.setVisible(true);
     }
     
-    public void addWatchDisplay(WatchDisplay watchDisplay){
+    public void addCommand(String name, Command command){
+        commands.put(name, command);
+    }
+    
+    public void addWatchDisplay(SwingWatchDisplay watchDisplay){
         this.add(watchDisplay,BorderLayout.CENTER);
     }
     
-    public void setWatchPresenter(WatchPresenter watchPresenter){
-        this.watchPresenter = watchPresenter;
+    public void addWatchDialog(SwingWatchDialog swingWatchDialog){
+        this.toolbar.add(swingWatchDialog);
     }
 
     private void initLabels() {
         labels.put("Exit", "Exit");
+        labels.put("Change", "Change");
     }
 
-    private JPanel toolbar() {
-        JPanel toolbar = new JPanel();
-        toolbar.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        toolbar.add(button("Exit"));
-        return toolbar;
+    private void initToolbar() {
+        this.toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.toolbar.add(button("Exit"));
+        this.toolbar.add(button("Change"));
     }
 
     private JButton button(String label) {
@@ -56,7 +64,7 @@ public class MainFrame extends JFrame{
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                watchPresenter.exit();
+                commands.get(label).execute();
             }
         });
         return button;

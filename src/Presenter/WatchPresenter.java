@@ -8,10 +8,10 @@ import static java.lang.Math.sin;
 
 public class WatchPresenter implements Observer{
 
-    private final WatchDisplay watchDisplay;
+    private final SwingWatchDisplay watchDisplay;
     private final Watch watch;
     
-    public WatchPresenter(WatchDisplay watchDisplay, Watch watch){
+    public WatchPresenter(SwingWatchDisplay watchDisplay, Watch watch){
         this.watchDisplay = watchDisplay;
         this.watch = watch;
         this.watch.addObserver(this);
@@ -19,12 +19,7 @@ public class WatchPresenter implements Observer{
     
     @Override
     public void update() {
-        this.watchDisplay.paint(getPoints());
-    }
-    
-    public void exit(){
-        this.watch.stopTimer();
-        System.exit(0);
+        this.watchDisplay.display(getPoints());
     }
     
     private Point[] getPoints() {

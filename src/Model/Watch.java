@@ -7,6 +7,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Watch {
+    private static final double PI2 = Math.PI * 2;
+    private static final double DegreesPerSecond = PI2 / 60;
+    private static final double DegreesPerMinute = DegreesPerSecond / 60;
+    private static final double DegreesPerHour = DegreesPerMinute / 12;
     private double second = Math.PI/2;
     private double minute = Math.PI/2;
     private double hour = Math.PI/2;
@@ -31,8 +35,19 @@ public class Watch {
         return hour;
     }
     
-    public void stopTimer(){
-        this.timer.cancel();
+    public void setSecond(double second){
+        changeSecondToAngle(second);
+        this.notifyObservers();
+    }
+    
+    public void setMinute(double minute){
+        changeMinuteToAngle(minute);
+        this.notifyObservers();
+    }
+    
+    public void setHour(double hour){
+        changeHourToAngle(hour);
+        this.notifyObservers();
     }
     
     public void addObserver(Observer o){
@@ -51,10 +66,6 @@ public class Watch {
     
     private TimerTask task() {
         return new TimerTask() {
-            private static final double PI2 = Math.PI * 2;
-            private static final double DegreesPerSecond = PI2 / 60;
-            private static final double DegreesPerMinute = DegreesPerSecond / 60;
-            private static final double DegreesPerHour = DegreesPerMinute / 12;
             @Override
             public void run() {
                 second = normalize(second - DegreesPerSecond);
@@ -62,11 +73,29 @@ public class Watch {
                 hour = normalize(hour - DegreesPerHour);
                 notifyObservers();
             }
-
-            private double normalize(double angle) {
-                return (angle + PI2) % PI2;
-            }
-
         };
     }
+    
+    
+    private double normalize(double angle) {
+        return (angle + PI2) % PI2;
+    }
+
+    private void changeSecondToAngle(double second) {
+        this.second = Math.PI / 2;
+        this.second = normalize(this.second - (second*DegreesPerSecond));
+    }
+
+    private void changeMinuteToAngle(double minute) {
+        this.minute = Math.PI / 2;
+        this.minute = normalize(this.minute - (minute*DegreesPerSecond));
+        this.hour = normalize(this.hour - (minute * 5 *DegreesPerMinute));
+    }
+
+    private void changeHourToAngle(double hour) {
+        this.hour = Math.PI / 2;
+        this.hour = normalize(this.hour - (hour * 5* DegreesPerSecond));
+    }
+    
+    
 }
