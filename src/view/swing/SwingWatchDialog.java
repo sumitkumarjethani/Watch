@@ -1,9 +1,10 @@
-package View;
+package view.swing;
 
 import java.awt.FlowLayout;
 import java.awt.Label;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import view.WatchDialog;
 
 public class SwingWatchDialog extends JPanel implements WatchDialog{
 

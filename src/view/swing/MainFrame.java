@@ -1,6 +1,6 @@
-package View;
+package view.swing;
 
-import Controller.Command;
+import controller.Command;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
