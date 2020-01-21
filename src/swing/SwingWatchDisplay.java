@@ -1,4 +1,4 @@
-package view.swing;
+package swing;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;

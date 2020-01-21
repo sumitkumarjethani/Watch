@@ -1,4 +1,4 @@
-package view.swing;
+package swing;
 
 import controller.Command;
 import java.awt.BorderLayout;
