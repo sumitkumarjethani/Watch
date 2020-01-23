@@ -1,4 +1,4 @@
-package Controller;
+package architecture.controller;
 
 public interface Command {
     

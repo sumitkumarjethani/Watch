@@ -1,10 +1,10 @@
 package swing;
 
+import architecture.Point;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -16,23 +16,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import view.WatchDisplay;
+import architecture.view.WatchDisplay;
 
 public class SwingWatchDisplay extends JPanel implements WatchDisplay{
     private final Image background;
     private final List<WatchDisplay.Listener> listeners;
-    private Point.Double[] points;
+    private Point[] points;
+    private boolean hoursGrabbed = false;
     
     public SwingWatchDisplay(){
         this.background = loadBackground();
         this.listeners = new ArrayList<>();
-        this.points = new Point.Double[0];
+        this.points = new Point[0];
         this.addMouseListener(mouseListener());
         this.addMouseMotionListener(mouseMotionListener());
     }
     
     @Override
-    public void display(Point.Double[] points) {
+    public void display(Point[] points) {
         this.points = points;
         this.repaint();
     }
@@ -42,9 +43,9 @@ public class SwingWatchDisplay extends JPanel implements WatchDisplay{
         g.clearRect(0, 0, this.getWidth(), this.getHeight());
         g.drawImage(background ,0, 0, this.getWidth(),this.getHeight(),null);
         int width = 7;
-        for (Point.Double point : this.points) {
+        for (Point point : this.points) {
             g2(g).setStroke(new BasicStroke(width));
-            g2(g).drawLine(centerx(), centery(), (int)point.x + centerx(), centery() - (int)point.y);
+            g2(g).drawLine(centerx(), centery(), (int)point.getX() + centerx(), centery() - (int)point.getY());
             width++;
         }
     }
@@ -83,12 +84,14 @@ public class SwingWatchDisplay extends JPanel implements WatchDisplay{
 
             @Override
             public void mousePressed(MouseEvent me) {
-                isTouchingHours(me.getX(), me.getY());
+                if(isTouchingHours(me.getX(), me.getY())){
+                    hoursGrabbed = true;
+                }
             }
             
             @Override
             public void mouseReleased(MouseEvent me) {
-
+                hoursGrabbed = false;
             }
 
             @Override
@@ -101,18 +104,23 @@ public class SwingWatchDisplay extends JPanel implements WatchDisplay{
         };
     }
     
-    private void isTouchingHours(int x, int y){
-        double m = (this.points[2].y - centery()) / (this.points[2].x - centerx());
-        if((y+9) < (m*x)+centerx() && (y-9) > (m*x)+centerx()){
-            System.out.println("si");
+    private boolean isTouchingHours(int x, int y){
+        if(x < (this.points[2].getX()+centerx()+5) && x > (this.points[2].getX()+centerx()-7) &&
+           y > (centery() - this.points[2].getY()-5) && y < (centery() - this.points[2].getY()+5)){
+            return true;
         }
+        return false;
     }
 
     private MouseMotionListener mouseMotionListener() {
         return new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent me) {
-                //...
+                if(!hoursGrabbed) return;
+                for (Listener listener : listeners) {
+                    listener.newHourPosition(new Point((me.getX()-centerx()),(me.getY()-centery())));
+                }
+                
             }
 
             @Override

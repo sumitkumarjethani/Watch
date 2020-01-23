@@ -1,6 +1,6 @@
-package swing;
+package main;
 
-import controller.Command;
+import architecture.controller.Command;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JPanel;
+import swing.SwingWatchDialog;
+import swing.SwingWatchDisplay;
 
 public class MainFrame extends JFrame{
     private final Map<String,String> labels;

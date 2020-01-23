@@ -1,4 +1,4 @@
-package View;
+package architecture.view;
 
 public interface WatchDialog {
     

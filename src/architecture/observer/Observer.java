@@ -1,4 +1,4 @@
-package observer;
+package architecture.observer;
 
 public interface Observer {
     
